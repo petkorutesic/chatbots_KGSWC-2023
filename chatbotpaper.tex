@@ -68,7 +68,7 @@ The second function represents the process of data acquisition, i.e., knowledge 
 $$f_{acquisition}(ChatbotModel, EnteredData) = OutputKnowledgeGraph$$
 The acquisition function takes a chatbot model and the data entered by the user as the input parameters. The output of the acquisition function is a wanted knowledge graph defined using only concepts from the domain ontologies (called $OutputKnowledgeGraph$). In this paper we describe main elements of the OBOP ontology that model different parts of chatbot conversations and present how the modeling function works for a simple use case. Additionally, we present the acquisition function through the usage of the model to populate a knowledge graph using a chatbot.      
 
-Our approach is defined by a set of requirements that include the following items:
+Since the main goal is to simplify the population of knowledge graphs using conversational systems (chatbots), we have explored the idea of modeling these chatbots within knowledge graphs as well. To leverage the reasoning capabilities of OWL ontologies, it is reasonable for the chatbot models to be represented, if possible, in the OWL Lite ontology class. Therefore, the goal of our approach can be boiled down to the following set of requirements:
 \begin{enumerate}
 \item
   The chatbot conversation and the structure of the output knowledge graph are both specified within the same knowledge graph (e.g. RDF file), representing a model.

@@ -25,9 +25,11 @@
 \usepackage{placeins}
 % If you use a FloatBarrier to prevent figures sliding to unwanted sections.
 
+\usepackage{todonotes}
+
 \begin{document}
 %
-\title{Ontology-based models of chatbots to populate Knowledge Graphs}
+\title{Ontology-Based Models of Chatbots for Populating Knowledge Graphs}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
@@ -68,7 +70,8 @@ The second function represents the process of data acquisition, i.e., knowledge 
 $$f_{acquisition}(ChatbotModel, EnteredData) = OutputKnowledgeGraph$$
 The acquisition function takes a chatbot model and the data entered by the user as the input parameters. The output of the acquisition function is a wanted knowledge graph defined using only concepts from the domain ontologies (called $OutputKnowledgeGraph$). In this paper we describe main elements of the OBOP ontology that model different parts of chatbot conversations and present how the modeling function works for a simple use case. Additionally, we present the acquisition function through the usage of the model to populate a knowledge graph using a chatbot.      
 
-Since the main goal is to simplify the population of knowledge graphs using conversational systems (chatbots), we have explored the idea of modeling these chatbots within knowledge graphs as well. To leverage the reasoning capabilities of OWL ontologies, it is reasonable for the chatbot models to be represented, if possible, in the OWL Lite ontology class. Therefore, the goal of our approach can be boiled down to the following set of requirements:
+Since the main goal is to simplify the population of knowledge graphs using conversational systems (chatbots), we have explored the idea of modeling these chatbots also within knowledge graphs. To leverage the reasoning capabilities of OWL ontologies and still to have good computational complexity, it is reasonable for the chatbot models to be represented, if possible, in the OWL Lite ontology class. Therefore, the goal of our approach can be boiled down to the following set of requirements:
+\todo{Stefan: I suggest explaining why these are requirements. Otherwise, it looks random.}
 \begin{enumerate}
 \item
   The chatbot conversation and the structure of the output knowledge graph are both specified within the same knowledge graph (e.g. RDF file), representing a model.
@@ -85,8 +88,12 @@ In the rest of the paper, we explain how we implement proposed requirements.
 The rest of the paper is organized as follows: In the next section, it is presented a use case with the flight registrations, which is exploited in subsequent sections to explain our approach. Afterwards, it is explained the design of the OBOP ontology which is used to generate our chatbots. Each subsection describes specific workflows of the chatbot and how those workflows are modelled by entities of the OBOP ontology. Finally, the paper concludes with the contribution section.
 
 \section{Use Case}
-To illustrate the applicability of our chatbot models, we consider an example with a chatbot that enables definition of flights. A possible category of users, that could benefit from this chatbot, is the airline personnel responsible for registering new flights and services related to those flights. The example was originally presented with the Ticket ontology\footnote{\label{Ticket Ontology}http://purl.org/tio/ns}, which is a domain vocabulary compliant to the GoodRelations \cite{hepp2008goodrelations} ontology. A simplified graphical representation of this knowledge graph is illustrated in Figure \ref{fig:usecase}.
 
+\todo{Stefan: I do not really understand the use case, because the description is too unstructured. I suggest describing the process step by step, possibly as an enumeration list which explains who does what in the process and what the final result is. It would be even better to have a process graphic which shows the relation of the different ontologies, chatbots etc.}
+
+To demonstrate the applicability of our chatbot models, we introduce an example involving a chatbot designed to facilitate the definition of flights. One potential group of users who could benefit from this chatbot includes airline personnel responsible for registering new flights and services related to those flights. Assuming that these users need to create a knowledge graph for each flight, we can employ the GoodRelations ontology\cite{hepp2008goodrelations} and the Ticket ontology\footnote{\label{Ticket Ontology}http://purl.org/tio/ns}, which aligns with the GoodRelations ontology. The knowledge graph that our chatbot constructs here is already presented in the examples of how to use the Ticket ontology. In Figure~\ref{fig:usecase}, we provide a simplified graphical representation of this knowledge graph for better visualization. 
+
+The primary objective of our chatbot use case is to simplify the process for end-users by posing straightforward questions, while the knowledge graph is generated seamlessly in the background using answers to those questions. The chatbot must have the capability to generate this knowledge graph and also to accommodate its extensions, such as adding the definition of additional ticket types if needed. By doing so, the chatbot determines the structure of the output ontology without explicitly asking the user to specify blank nodes, instances of specific ontology classes and other details, thereby alleviating the burden of detailed ontology engineering. To achieve this level of sophistication, the chatbot model incorporates all the necessary details, and the key aspects of the model are outlined in the section dedicated to modeling architecture.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/use_case}
@@ -100,7 +107,7 @@ The knowledge graph contains data about a specific flight with the flight number
 
 \FloatBarrier
 During the interaction with the chatbot, the user must provide the flight number, departure and destination airports, as well as the departure and arrival times.
-Below is a representation of the example knowledge graph in RDF format using Turtle syntax:
+Below is a representation of the example knowledge graph in RDF format using Turtle syntax, with the prefix definitions omitted for brevity:
 \begin{lstlisting}[basicstyle=\small]
 foo:LH1234 a tio:Flight ;
   tio:from [ a tio:Stop ;
@@ -137,10 +144,11 @@ foo:offer1 a gr:Offering ;
      gr:acceptedPaymentMethods gr:MasterCard, gr:VISA ;
      gr:availableDeliveryMethods tio:Etix .	
 \end{lstlisting}
-Instances of the ticket ontology (knowledge graphs) created using our chatbot can be further searched by customers that want to book flight tickets. Since the system is comprised of ontologies the search operation can be defined using SPARQL queries. Moreover, customers could have the option to use conversational agents like KBot\cite{ait2020kbot} in order to find suitable flight tickets using natural language understanding over linked data. In that case semantic web can be used directly to find suitable flights without having to scrape websites like described in \cite{turnip2019application}.        
+The knowledge graphs (instances of the Ticket ontology) generated using our chatbot offer significant usefulness as they can be easily searched by customers looking to book flight tickets. The use of ontologies in the system allows for defining search operations using SPARQL queries.
+Moreover, customers have the option to employ conversational agents like KBot\cite{ait2020kbot} in order to find suitable flight tickets using natural language understanding over linked data. In that case semantic web technologies can be used directly to find suitable flights without resorting to web scraping methods as described in \cite{turnip2019application}.        
    
 \section{Related work}
-One of the first known conversational agents is ALICE \cite{wallace2009anatomy} which uses AIML (Artificial Intelligence Markup Language) which is basically XML to design conversations. The system uses a botmaster which monitors conversations to make them more appropriate. Unlike writing rules in a XML based language, the rules in our approach are encoded in an ontology instance and can be stored in an RDF file. Historically, there have been different approaches as to how to use semantic nets to generate chatbot. One of the first examples is OntBot \cite{al2011ontbot} that transforms ontologies and knowledge into relational database and then uses relational database to generate chats. Another example of usage of model driven conversational systems is presented in \cite{perez2020model}, where a special domain-specific language with elements such as intents, entities, actions and flows is used to design the dialogue structure of task oriented chatbots. In contrast, our idea is to represent those elements such as intents and actions in knowledge graphs.  
+One of the first known conversational agents is ALICE \cite{wallace2009anatomy} which uses AIML (Artificial Intelligence Markup Language) which is basically XML to design conversations. The system uses a botmaster which monitors conversations to make them more appropriate. Unlike writing rules in a XML based language, the rules in our approach are encoded in an ontology instance and can be stored in an RDF file. Historically, there have been different approaches as to how to use semantic nets to generate chatbot. One of the first examples is OntBot \cite{al2011ontbot} that transforms ontologies and knowledge into relational database and then uses relational database to generate chats. Another example of usage of model driven conversational systems is presented in \cite{perez2020model}, where a special domain-specific language with elements such as intents, entities, actions and flows is used to design the dialogue structure of task oriented chatbots. In contrast, our idea is to represent those elements such as intents and actions in knowledge graphs. \cite{bocklisch2017rasa}
 
 There has been many approaches to model user interfaces and web-application logic using knowledge graphs. An approach described in ~\cite{rutesic2021enhanced} proposes a way of modelling of HTML application structure and its logic using RDF graphs.
 In this paper we deal with the question of modeling and generating chatbots that are used to maintain dialogs with users to acquire data. Moreover, those acquired data are used to directly populate corresponding domain ontologies (knowledge graphs). The expressiveness of formal ontologies came into handy to represent both the models of chatbots and the complex knowledge in the business logic of target ontologies. According to \cite{agarwal2020review} conversational clients or chatbots are designed to be used either as task-oriented or open-ended dialog generators. In our approach we develop a task-oriented chatbot that has to collect data (ontology instance) of a particular ontology. The actual task is described based on rules specified in the model represented as an ontology instance defined using our OBOP ontology. Thus, our chatbot can also be classified as a rule-based chatbot. To enable humanlike conversation our task-based chatbot module is incorporated in a an open-ended chatbot which is further described in the implementation section.     
@@ -178,7 +186,7 @@ In Figure~\ref{fig:conv_block} can be seen a conversation block named \textit{bl
 
 \FloatBarrier
 \subsection{Branching control structure}
-In order to allow the users of chatbots to make decisions and choose between different paths of execution, the OBOP ontology has means to model branching control structures. The \textit{obop:Branching} class represents a conditional structure. A simple branching structure in our example is explained in the case of choosing an airline that operates the current flight. The chatbot user is therefore asked to choose exactly one airline company among those presented options.  
+To enable chatbot users to make decisions and select different paths of execution, the OBOP ontology has means to model branching control structures. The class \textit{obop:Branching} represents a conditional structure. A simple branching structure in our example is explained in the case of choosing an airline that operates the current flight. The chatbot user is therefore asked to choose exactly one airline company among those presented options.  
 One possible conversation is presented in the following listing:
 \begin{lstlisting}[basicstyle=\small,  xleftmargin=0.7cm ]
 chatbot: Enter the airline that operates your flight.
@@ -193,8 +201,7 @@ foo:LH1234
   tio:operatedBy <http://dbpedia.org/resource/Lufthansa>.
 \end{lstlisting}
 The part of the model that generates the previous chatbot question and adds the specified triple, as the consequence of the chosen option, is represented in Figure \ref{fig:branching_schema}. It can be seen that the same conversational block \textit{block\_1} is used because we consider it as the part of the same conversation section. The question to choose one of multiple possible values is denoted by the instance of the class obop:Question called \textit{question\_1}. \textit{question\_1} has the data property \textit{obop:hasTex} with the text of the question. Additionally, the question has the value 2 of the \textit{obop:hasPositionNumber} data property that serves to denote that this question has second place in the conversation block.         
-The question \textit{question\_1} has an instance of the class \textit{obop:hasBranching} called \textit{branching\_1} and this branching is specified by the instance of the \textit{obop:Connection} class named \textit{conn\_1}. The connection class specifies how the two instances of the ontology classes should be related. The instance of this class has functional properties that specify source and destination of object properties. In our case the source is \textit{flight\_model\_1} and the destination is \textit{airline\_model\_1} which serves as a model for an instace of the class \textit{dbpedia:Agent} that will be created during the chatbot execution. Additionally, the object property that has to be inserted in the output graph between these two instances is specified by the \textit{obop:containsDatatype} object property and it is in our case \textit{tio:operatedBy} property. This object property that has to be created is denoted by dashed line in Figure \ref{fig:branching_schema}. However, this edge is not part of the actual model graph.    
-
+The question \textit{question\_1} has an instance of the class \textit{obop:hasBranching} called \textit{branching\_1} and this branching is specified by the instance of the \textit{obop:Connection} class named \textit{conn\_1}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/branching_schema}
@@ -203,6 +210,7 @@ The question \textit{question\_1} has an instance of the class \textit{obop:hasB
   \label{fig:branching_schema}
 \end{figure}
 
+The connection class specifies how the two instances of the ontology classes should be related. The instance of this class has functional properties that specify source and destination of object properties. In our case the source is \textit{flight\_model\_1} and the destination is \textit{airline\_model\_1} which serves as a model for an instace of the class \textit{dbpedia:Agent} that will be created during the chatbot execution. Additionally, the object property that has to be inserted in the output graph between these two instances is specified by the \textit{obop:containsDatatype} object property and it is in our case \textit{tio:operatedBy} property. This object property that has to be created is denoted by dashed line in Figure \ref{fig:branching_schema}. However, this edge is not part of the actual model graph.    
 
 It can be seen that the connection instance specifies a predicate (object property) and an object (the instance) of a new triple. For our knowledge graph, the user needs to choose exactly one airline from the set of possible airlines. Another possibility would be to enable the user to simply type in an IRI of the wanted airline which has to be an instance of the class \textit{dbpedia:Agent}. Choosing an option from the list of available options would be mostly easier for the end user and we described that way. At the bottom part of the Figure \ref{fig:branching_schema} is defined an instance of the \textit{obop:Collection}class named \textit{airlines\_collection\_1}. The connection instance conn\_1 is related to this collection by the object property \textit{obop:choseOneDestinationFrom} which specifies exactly how to form the object of a new triple. In this case our simple collection contains two instances of the class \textit{obop:CollectionItem} corresponding to Lufthansa and Ryanair airlines. 
 In order to stay in the scope of OWL Lite sublanguage, OBOP collections are not defined using rdf:Bag, rdf:Seq or by using restrictions like \textit{owl:someValuesFrom}. Collections are basically used by the chatbot program in the runtime phase and they are not used in the process of reasoning.     

@@ -84,7 +84,7 @@ The acquisition function takes a chatbot model created in the modeling process a
   % \Description{Big picture }
   \label{fig:chatbotsystem}
 \end{figure}
-Since the main goal is to simplify the population of knowledge graphs using conversational systems (chatbots), we have explored the idea of modelling these chatbots also within knowledge graphs. To leverage the reasoning capabilities of OWL ontologies and still have good computational complexity, it is reasonable for the chatbot models to be represented, if possible, in the OWL Lite ontology class. Therefore, the goal of our approach can be boiled down to the following set of requirements:
+Since the main goal is to simplify the population of knowledge graphs using conversational systems (chatbots), we have explored the idea of modelling these chatbots also within knowledge graphs. To leverage the reasoning capabilities of OWL ontologies, it is reasonable for the chatbot models to be represented in the OWL DL ontology class. Therefore, the goal of our approach can be boiled down to the following set of requirements:
 \begin{enumerate}
 \item
   The chatbot conversation and the structure of the output knowledge graph are both specified within the same knowledge graph (e.g. RDF file), representing a model.
@@ -157,6 +157,7 @@ One of the first known conversational agents is ALICE \cite{wallace2009anatomy} 
 
 There have been many approaches to model user interfaces and web-application logic using knowledge graphs. An approach described in \cite{rutesic2021enhanced} proposes a method of modelling HTML application structure and its logic using RDF graphs.
 In this paper, we deal with a similar question of modelling and generating chatbots used to engage in dialogs with users to acquire data. Furthermore, the acquired data is used to directly populate desired output knowledge graphs based on domain ontologies. The expressiveness of formal ontologies proves valuable in representing both the models of chatbots and the complex knowledge within the business logic of target ontologies.
+Chatbots generated using this approach could prove advantageous wherever the description of complex products and services using ontologies is required, as is the case in emerging business models like {\itshape Distributed Market Spaces} \cite{radonjic2020arising}. This approach complements the method described in \cite{hitz2016generic}, where the system utilizes SPARQL queries to identify appropriate complex products and services.  
 
 As stated in \cite{agarwal2020review}, conversational clients or chatbots are designed to be used either as task-oriented or open-ended dialog generators. In our approach, we develop a task-oriented chatbot responsible for collecting data (knowledge graph) based on particular ontologies. The actual task is described based on rules specified in the model represented again as knowledge graph defined using our OBOP ontology. Thus, our chatbot can also be classified as a rule-based chatbot. To enable human-like conversation, our task-based chatbot module is incorporated in a an open-ended chatbot which is further described in the implementation section. The intention of our system is not to design a chatbot capable of convincing a human that (s)he is chatting with a human instead of a computer program. That intelligent behavior depends on good knowledge sets. Instead, we focus on the creation of chatbots that gather information in the form of knowledge graphs with individuals (instances) of the respective domain ontologies.  
 
@@ -245,7 +246,7 @@ foo:ticket5 a tio:TicketPlaceholder ;
      tio:accessTo foo:LH1234 ;
      tio:eligibleServiceLevel tio:Economy ] .
 \end{lstlisting}
-The part of the model that generates the preceding section of the chatbot conversation is illustrated in Figure \ref{fig:iteration_example}. The question \textit{question\_2} to ask for a new ticket type is related to an instance of the \textit{obop:Loop} class called \textit{loop\_1}. Each iteration of the loop specifies adding a new ticket which is represented by a conversational block \textit{block\_3}. If the user answers positively to the chatbot's question, a new ticket instance is generated according to the \textit{ticket\_model\_1}. Together with the ticket is generated a blank node corresponding to the \textit{\_:bnode} instance. The new blank node is related to the flight instance which is already created in the previous examples according to the \textit{flight\_model\_1}. The object properties \textit{tio:scope} and \textit{tio:accessTo} are also automatically created. However, \textit{rdfs:label} had to be specified using \textit{obop:containsDatatype} object property. In order to choose between possible service classes (e.g., Business or Economy) a new question (\textit{question\_3}) and connection (\textit{conn\_2}) was necessary. \textit{conn\_2} is not completely presented and ontology classes of same instances are omitted in Figure \ref{fig:iteration_example} for improved readability. 
+The part of the model that generates the preceding section of the chatbot conversation is illustrated in Figure \ref{fig:iteration_example}. The question \textit{question\_2} to ask for a new ticket type is related to an instance of the \textit{obop:Loop} class called \textit{loop\_1}. Each iteration of the loop specifies adding a new ticket which is represented by a conversational block \textit{block\_3}. If the user answers positively to the chatbot's question, a new ticket instance is generated according to the \textit{ticket\_model\_1}. Together with the ticket is generated a blank node corresponding to the \textit{\_:bnode} instance. The new blank node is related to the flight instance which is already created in the previous examples according to the \textit{flight\_model\_1}.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\linewidth]{img/iteration_example}
@@ -253,6 +254,8 @@ The part of the model that generates the preceding section of the chatbot conver
   % \Description{Iteration}
   \label{fig:iteration_example}
 \end{figure}
+
+The object properties \textit{tio:scope} and \textit{tio:accessTo} are also automatically created. However, \textit{rdfs:label} had to be specified using \textit{obop:containsDatatype} object property. In order to choose between possible service classes (e.g., Business or Economy) a new question (\textit{question\_3}) and connection (\textit{conn\_2}) was necessary. \textit{conn\_2} is not completely presented and ontology classes of same instances are omitted in Figure \ref{fig:iteration_example} for improved readability. 
 
 
 \FloatBarrier 
@@ -283,7 +286,9 @@ In this paper we introduced models for conversational agents (chatbots). These c
 In order to show how to create a chatbot model, we designed a chatbot intended for flight descriptions. 
 The chatbots we propose adhere to the rule-based chatbots, where replies are generated using predefined rules intgerated in the models of respective conversations. These conversation models represent templates according to which replies (questions) are created.   
 
-The requirements to the approach outlined in the introduction of the paper are met with our implementation. The conversation model and the structure of the knowledge graph are both included in the same knowledge graph according to the first requirement. The limitations of this approach are high complexity of the model graphs and challenging maintenance of the generated graphs. The second and third requirements are addressed by the explicit definition of specific classes, object properties, and data properties in the OBOP ontology. These definitions correspond to fundamental programming control structures, ensuring the capability to capture and manage various aspects of the conversation's flow and logic.
+The requirements to the approach outlined in the introduction of the paper are met with our implementation. The conversation model and the structure of the knowledge graph are both included in the same knowledge graph according to the first requirement. The limitations of this approach are high complexity of the model graphs and challenging maintenance of the generated graphs. The second and third requirements are addressed by the explicit definition of specific classes, object properties, and data properties in the OBOP ontology. These definitions correspond to fundamental programming control structures, ensuring the capability to capture and manage various aspects of the conversation's flow and logic. 
+
+Describing chatbot models based on OWL ontologies might offer significant benefits, including the potential for OWL reasoning applied to these models. The OWL reasoning capability could identify flawed models that might result in inconsistent knowledge graphs. Another advantage lies in the potential for reusing existing models, enabling their sharing and querying through SPARQL. Moreover, the application of machine learning algorithms to existing models could streamline the process of automatically or semi-automatically generating new chatbots for description of similar problems.
 
 \begin{comment}
   

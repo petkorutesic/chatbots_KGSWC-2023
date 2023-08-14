@@ -16,6 +16,8 @@
     "ait2020kbot"
     "turnip2019application"
     "perez2020model"
-    "bocklisch2017rasa"))
+    "bocklisch2017rasa"
+    "radonjic2020arising"
+    "hitz2016generic"))
  '(or :bibtex :latex))
 
